@@ -1,0 +1,78 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+                      "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!-- GDBus 2.32.4 -->
+<node>
+  <interface name="org.freedesktop.DBus.Properties">
+    <method name="Get">
+      <arg type="s" name="interface_name" direction="in"/>
+      <arg type="s" name="property_name" direction="in"/>
+      <arg type="v" name="value" direction="out"/>
+    </method>
+    <method name="GetAll">
+      <arg type="s" name="interface_name" direction="in"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QVariant"/>
+      <arg type="a{sv}" name="properties" direction="out"/>
+    </method>
+    <method name="Set">
+      <arg type="s" name="interface_name" direction="in"/>
+      <arg type="s" name="property_name" direction="in"/>
+      <arg type="v" name="value" direction="in"/>
+    </method>
+    <signal name="PropertiesChanged">
+      <arg type="s" name="interface_name"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In1" value="QVariant"/>
+      <arg type="a{sv}" name="changed_properties"/>
+      <arg type="as" name="invalidated_properties"/>
+    </signal>
+  </interface>
+  <interface name="org.freedesktop.DBus.Introspectable">
+    <method name="Introspect">
+      <arg type="s" name="xml_data" direction="out"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.DBus.Peer">
+    <method name="Ping"/>
+    <method name="GetMachineId">
+      <arg type="s" name="machine_uuid" direction="out"/>
+    </method>
+  </interface>
+  <interface name="org.gnome.Rhythmbox3.PlaylistManager">
+    <method name="GetPlaylists">
+      <arg type="as" name="arg_0" direction="out">
+      </arg>
+    </method>
+    <method name="CreatePlaylist">
+      <arg type="s" name="name" direction="in">
+      </arg>
+    </method>
+    <method name="DeletePlaylist">
+      <arg type="s" name="name" direction="in">
+      </arg>
+    </method>
+    <method name="AddToPlaylist">
+      <arg type="s" name="playlist" direction="in">
+      </arg>
+      <arg type="s" name="uri" direction="in">
+      </arg>
+    </method>
+    <method name="RemoveFromPlaylist">
+      <arg type="s" name="playlist" direction="in">
+      </arg>
+      <arg type="s" name="uri" direction="in">
+      </arg>
+    </method>
+    <method name="ExportPlaylist">
+      <arg type="s" name="playlist" direction="in">
+      </arg>
+      <arg type="s" name="uri" direction="in">
+      </arg>
+      <arg type="b" name="mp3_format" direction="in">
+      </arg>
+    </method>
+    <method name="ImportPlaylist">
+      <arg type="s" name="uri" direction="in">
+      </arg>
+    </method>
+  </interface>
+</node>
+
