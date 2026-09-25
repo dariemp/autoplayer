@@ -26,6 +26,7 @@
 #include "udisks.h"
 #include <iostream>
 #include <magic.h>
+#include <QtCore/QThread>
 
 using namespace std;
 
@@ -77,7 +78,7 @@ void Autoplayer::onDeviceChanged(QDBusObjectPath device_object_path)
     cout << "Un dispositivo cambió: " << device_object_path.path().toStdString() << endl;
     QString mount_path = get_device_mount_path(device_object_path);
     // Si no está montado o ya fue escaneado, no hacer nada y retornar
-    if (mount_path == NULL)
+    if (mount_path.isNull())
         return;
     QStringList *playlist = get_playlist(mount_path);
     // Si no hay música en el dispositivo, no hacer nada y retornar
@@ -118,7 +119,7 @@ QString Autoplayer::get_device_mount_path(QDBusObjectPath device_object_path)
     
     /* Si el dispositivo ya fue escaneado y no está montado, significa que
      * recién se desmontó, hay que olvidarlo. */
-    QString mount_path = NULL;
+    QString mount_path;
     if (already_scanned.contains(device_object_path)) {
             if (!is_mounted)
                 already_scanned.remove(device_object_path);
@@ -145,8 +146,8 @@ QString Autoplayer::get_mime_type(QString file_path)
     magicMimePredictor = magic_open(MAGIC_MIME_TYPE);
     if (magicMimePredictor) {
         if (!magic_load(magicMimePredictor, 0)) {
-            char *file = file_path.toAscii().data();
-            const char *mime = magic_file(magicMimePredictor, file);
+            QByteArray file = file_path.toLocal8Bit();
+            const char *mime = magic_file(magicMimePredictor, file.constData());
             result = QString(mime);
         }
         magic_close(magicMimePredictor);
@@ -235,7 +236,7 @@ void Autoplayer::play(QStringList *playlist)
         playlist_manager->DeletePlaylist(playlist_name);
     }
     // Si no existe levanta excepción, la ignoramos
-    catch (exception){}
+    catch (const exception &){}
     // Crear una lista de reproducción nueva
     playlist_manager->CreatePlaylist(playlist_name);
 
@@ -250,7 +251,7 @@ void Autoplayer::play(QStringList *playlist)
     /* Esperar a que levante Rhythmbox... sí, ok, ya sé que esto es una
      * mala práctica. Lo correcto sería conectar a alguna señal remota que
      * avise de que está listo el reproductor, pero mejor no complicarse :-P */
-    sleep(5);
+    QThread::sleep(5);
 
     // Obtener la interfaz de listas de reproducción definida por MPRIS
     Playlists* playlists_interface = get_rhythmbox_playlists();

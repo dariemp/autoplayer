@@ -35,12 +35,7 @@ OTHER_FILES += \
     xml/org.freedesktop.UDisks.xml \
     xml/org.freedesktop.UDisks.Device.xml
 
-unix:!macx:!symbian: LIBS += -L/usr/lib/x86_64-linux-gnu/ -lQtDBus
-
 INCLUDEPATH += $$PWD/
 DEPENDPATH += $$PWD/
 
-unix:!macx:!symbian: LIBS += -L/usr/lib/ -lmagic
-
-INCLUDEPATH += /usr/include
-DEPENDPATH += /usr/include
+unix:!macx: LIBS += -lmagic

@@ -1,0 +1,8 @@
+# Build outputs
+*.o
+moc_*
+.qmake.stash
+autoplayer-qt-cpp/Makefile
+autoplayer-qt-cpp/autoplayer-qt-cpp
+autoplayer-glib-c/autoplayer-glib-c
+__pycache__/

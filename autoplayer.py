@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # *- encoding: utf-8 -*
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -26,12 +26,12 @@
 
 from dbus import SessionBus, SystemBus, Interface
 from dbus.mainloop.glib import DBusGMainLoop
-from gobject import MainLoop
+from gi.repository.GLib import MainLoop
 from os import listdir
 from os.path import join, isfile
 from mimetypes import guess_type
-from urlparse import urljoin
-from urllib import pathname2url
+from urllib.parse import urljoin
+from urllib.request import pathname2url
 from sys import stderr
 from time import sleep
 
@@ -81,7 +81,7 @@ class AutoPlayer:
         " La señal 'DeviceChanged' es emitida cuando se cambia el estado de un"
         " dispositivo (por ejemplo, cuando se monta o desmonta). UDisks envía "
         " el camino del objeto remoto del dispositivo que cambió de estado.   "
-        print u'Un dispositivo cambió: %s' % device_object_path
+        print('Un dispositivo cambió: %s' % device_object_path)
         mount_path = self._get_device_mount_path(device_object_path)
         # Si no está montado o ya fue escaneado, no hacer nada y retornar
         if not mount_path:
@@ -96,7 +96,7 @@ class AutoPlayer:
         " La señal 'DeviceRemoved' es emitida cuando un dispositivo es   "
         " desconectado por hardware de la PC. UDisks envía el camino del "
         " objeto remoto del dispositivo."
-        print u'Un dispositivo fue desconectado: %s' % device_object_path
+        print('Un dispositivo fue desconectado: %s' % device_object_path)
         if device_object_path in self._already_scanned:
             del self._already_scanned[device_object_path]
 
@@ -123,7 +123,7 @@ class AutoPlayer:
 
         # La propiedad 'DeviceIsMounted' devuelve si está montado
         is_mounted = device.Get(device_dbus_interface, 'DeviceIsMounted')
-        print u'¿Está montado %s? : %s' % (dev_file, str(bool(is_mounted)))
+        print('¿Está montado %s? : %s' % (dev_file, str(bool(is_mounted))))
 
         # Si el dispositivo ya fue escaneado y no está montado, significa que
         # recién se desmontó, hay que olvidarlo.
@@ -143,7 +143,7 @@ class AutoPlayer:
         return mount_path
 
     def _get_playlist(self, directory_path):
-        print u'Buscando música en el directorio %s' % directory_path
+        print('Buscando música en el directorio %s' % directory_path)
         playlist = []
         filenames = listdir(directory_path)
         for filename in filenames:
@@ -151,6 +151,9 @@ class AutoPlayer:
             if isfile(path):
                 # Se obtiene el tipo MIME, ejemplo "audio/mpeg"
                 mime_type = guess_type(path)[0]
+                # Archivos sin tipo MIME conocido se ignoran
+                if mime_type is None:
+                    continue
                 # Lo que interesa es la primera parte del tipo MIME
                 category = mime_type.split('/')[0]
                 if category == 'audio':
@@ -249,7 +252,7 @@ class AutoPlayer:
         if i < playlists_count:
             playlist_id = playlists[i][0]
         else:
-            print >>stderr, u'Rhythmbox no cargó la lista correctamente.'
+            print('Rhythmbox no cargó la lista correctamente.', file=stderr)
             return
 
         # Si se llega aquí, es que se encontró nuestra lista de reproducción

@@ -53,8 +53,11 @@ void play(GList *playlist);
 
 void init_dbus()
 {
-    // Se inicializa el sistema de tipos de Glib
+    /* Se inicializa el sistema de tipos de Glib. Desde GLib 2.36 esto se
+     * hace automáticamente y g_type_init() está obsoleto. */
+#if !GLIB_CHECK_VERSION(2, 36, 0)
     g_type_init();
+#endif
 
     /* Se inicializa un GHashTable para controlar la repetición de escaneos
      * innecesarios a los dispositivos   */
